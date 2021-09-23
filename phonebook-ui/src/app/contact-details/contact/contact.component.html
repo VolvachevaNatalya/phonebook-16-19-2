@@ -1,4 +1,4 @@
-<div class="container contact" *ngIf="contact">
+<div class="container contact" *ngIf="contact && contactToDisplay">
   <div class="row contact-title">Contact</div>
   <form class="row">
     <div class="col-md-2 icon">
@@ -9,12 +9,14 @@
     </div>
     <div class="col-md-3 col-sm-4 col-6 form-group">
       <label>First Name</label>
-      <input [readonly]="!contactEditFlag" name="firstName" class="form-control" [(ngModel)]="contact.firstName">
+      <input [readonly]="!contactEditFlag" name="firstName" class="form-control" [value]="contactToDisplay.firstName"
+             [(ngModel)]="contact.firstName">
     </div>
 
     <div class="col-md-3 col-sm-3 col-6 form-group">
       <label>Last Name</label>
-      <input [readonly]="!contactEditFlag" name="lastName" class="form-control" [(ngModel)]="contact.lastName">
+      <input [readonly]="!contactEditFlag" name="lastName" class="form-control" [value]="contactToDisplay.lastName"
+             [(ngModel)]="contact.lastName">
 
     </div>
     <div class="col-sm-1 col-md-1 edit-picture" *ngIf="!contactEditFlag">

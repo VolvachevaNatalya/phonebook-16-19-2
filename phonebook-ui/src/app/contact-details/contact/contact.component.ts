@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Contact} from "../../model/contact";
 import {ActivatedRoute} from "@angular/router";
 import {ContactService} from "../../service/contact.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-contact',
@@ -11,8 +12,11 @@ import {ContactService} from "../../service/contact.service";
 export class ContactComponent implements OnInit {
   public contactEditFlag = false;
   public contact: Contact | undefined;
+  public contactToDisplay: Contact | undefined;
   public imageSave = "assets/images/save.png";
   public imageEdit = "assets/images/edit.png";
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -25,8 +29,13 @@ export class ContactComponent implements OnInit {
 
   getContact(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.contactService.getContact(id)
-      .subscribe(contact => this.contact = contact);
+    const getContactSubscription = this.contactService.getContact(id)
+      .subscribe(contact => {
+        this.contact = contact;
+        this.contactToDisplay = contact;
+      });
+
+    this.subscriptions.push(getContactSubscription);
   }
 
   toggleEditContact() {
@@ -34,8 +43,12 @@ export class ContactComponent implements OnInit {
   }
 
   updateContact() {
-    this.contactService.updateContact(this.contact)
-      .subscribe();
-    this.contactEditFlag = !this.contactEditFlag;
+    const updateContactSubscription = this.contactService.updateContact(this.contact)
+      .subscribe(_ => {
+        this.contactToDisplay = this.contact;
+        this.contactEditFlag = !this.contactEditFlag;
+      });
+
+    this.subscriptions.push(updateContactSubscription);
   }
 }
