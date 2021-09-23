@@ -12,6 +12,7 @@ import {Subscription} from "rxjs";
 export class ContactComponent implements OnInit, OnDestroy {
   public contactEditFlag = false;
   public contact: Contact | undefined;
+  public contactToDisplay: Contact | undefined;
   public imageSave = "assets/images/save.png";
   public imageEdit = "assets/images/edit.png";
   private subscriptions: Subscription[] = [];
@@ -28,7 +29,10 @@ export class ContactComponent implements OnInit, OnDestroy {
   getContact(): Subscription {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     return this.contactService.getContact(id)
-      .subscribe(contact => this.contact = contact);
+      .subscribe(contact => {
+        this.contact = Object.assign({}, contact);
+        this.contactToDisplay = Object.assign({}, contact);
+      });
   }
 
   toggleEditContact() {
@@ -36,9 +40,14 @@ export class ContactComponent implements OnInit, OnDestroy {
   }
 
   updateContact() {
-    if (this.contact) {
-      this.subscriptions.push(this.contactService.updateContact(this.contact)
-        .subscribe(_ => this.contactEditFlag = !this.contactEditFlag))
+    if (this.contactToDisplay) {
+      this.subscriptions.push(this.contactService.updateContact(this.contactToDisplay)
+        .subscribe(_ => {
+          this.contactEditFlag = !this.contactEditFlag;
+          this.contact = Object.assign({}, this.contactToDisplay);
+        },
+         _ => this.contactToDisplay = Object.assign({}, this.contact))
+      );
     }
   }
 
