@@ -14,6 +14,7 @@ import {AddressComponent} from './contact-details/address/address.component';
 import {ContactComponent} from './contact-details/contact/contact.component';
 import {EmailElementComponent} from './contact-details/email/emeail-element/email-element.component';
 import { ContactsComponent } from './contacts/contacts.component';
+import { EditAddressComponent } from './contact-details/address/edit-address/edit-address.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ContactsComponent } from './contacts/contacts.component';
     ContactComponent,
     ContactsComponent,
     EmailElementComponent,
+    EditAddressComponent,
   ],
   imports: [
     BrowserModule,
